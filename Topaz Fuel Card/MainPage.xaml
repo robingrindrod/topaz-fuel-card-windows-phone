@@ -60,8 +60,8 @@
             <TextBlock HorizontalAlignment="Center" Margin="0" TextWrapping="Wrap" Text="Diesel" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" Height="27" Width="54"/>
             <Image HorizontalAlignment="Center" Height="100" Margin="10,0" VerticalAlignment="Center" Width="100" Source="/Assets/petrol.png"/>
             <Image HorizontalAlignment="Center" Height="100" Margin="10,0" VerticalAlignment="Center" Width="100" Source="/Assets/diesel.png" Grid.Row="1"/>
-            <TextBlock x:Name="petrolPriceLabel" Grid.Column="2" HorizontalAlignment="Center" Margin="10,0" TextWrapping="Wrap" Text="150.00c" VerticalAlignment="Center"/>
-            <TextBlock x:Name="dieselPriceLabel" Grid.Column="2" HorizontalAlignment="Center" Margin="10,0" TextWrapping="Wrap" Text="150.00c" VerticalAlignment="Center" Grid.Row="1"/>
+            <TextBlock x:Name="petrolPriceLabel" Grid.Column="2" HorizontalAlignment="Center" Margin="10,0" TextWrapping="Wrap" Text="{Binding PetrolPrice}" VerticalAlignment="Center"/>
+            <TextBlock x:Name="dieselPriceLabel" Grid.Column="2" HorizontalAlignment="Center" Margin="10,0" TextWrapping="Wrap" Text="{Binding DieselPrice}" VerticalAlignment="Center" Grid.Row="1"/>
 
         </Grid>
 

@@ -18,10 +18,14 @@ namespace Topaz_Fuel_Card
         {
             InitializeComponent();
 
-
-
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            Prices prices = Prices.RetrievePrices();
+            DataContext = prices;
         }
 
         // Sample code for building a localized ApplicationBar
