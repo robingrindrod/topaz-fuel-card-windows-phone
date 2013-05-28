@@ -24,8 +24,7 @@ namespace Topaz_Fuel_Card
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Prices prices = Prices.RetrievePrices();
-            DataContext = prices;
+            DataContext = App.ViewModel;
         }
 
         // Sample code for building a localized ApplicationBar

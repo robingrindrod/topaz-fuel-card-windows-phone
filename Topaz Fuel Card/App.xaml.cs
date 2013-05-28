@@ -18,6 +18,20 @@ namespace Topaz_Fuel_Card
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
 
+        private static TopazViewModel viewModel;
+
+        public static TopazViewModel ViewModel
+        {
+            get
+            {
+                if (viewModel == null)
+                {
+                    viewModel = new TopazViewModel();
+                }
+                return viewModel;
+            }
+        }
+
         /// <summary>
         /// Constructor for the Application object.
         /// </summary>
@@ -61,12 +75,14 @@ namespace Topaz_Fuel_Card
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            ViewModel.UpdatePrices();
         }
 
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
+            ViewModel.UpdatePrices();
         }
 
         // Code to execute when the application is deactivated (sent to background)
