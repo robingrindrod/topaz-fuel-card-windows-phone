@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
 
@@ -37,24 +35,33 @@ namespace Topaz_Fuel_Card
         {
             State state = (State)result.AsyncState;
             HttpWebRequest request = state.Request;
-            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result);
-            Stream resultStream = response.GetResponseStream();
-
-            // TODO Parse XML
-            XDocument pricesXml = XDocument.Load(resultStream);
-            IEnumerable<XElement> pricesXmlElements = pricesXml.Descendants("price");
-            String dieselPrice = (from price in pricesXmlElements
-                                  where price.Attribute("fuel").Value == "Diesel"
-                                  select price.Value).Single<String>();
-            String petrolPrice = (from price in pricesXmlElements
-                                  where price.Attribute("fuel").Value == "Petrol"
-                                  select price.Value).Single<String>();
-
-            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            try
             {
-                UpdateDieselPrice(Decimal.Parse(dieselPrice));
-                UpdatePetrolPrice(Decimal.Parse(petrolPrice));
-            });
+                HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result);
+                Stream resultStream = response.GetResponseStream();
+
+                XDocument pricesXml = XDocument.Load(resultStream);
+                IEnumerable<XElement> pricesXmlElements = pricesXml.Descendants("price");
+                String dieselPrice = (from price in pricesXmlElements
+                                      where price.Attribute("fuel").Value == "Diesel"
+                                      select price.Value).Single<String>();
+                String petrolPrice = (from price in pricesXmlElements
+                                      where price.Attribute("fuel").Value == "Petrol"
+                                      select price.Value).Single<String>();
+
+                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    UpdateDieselPrice(Decimal.Parse(dieselPrice));
+                    UpdatePetrolPrice(Decimal.Parse(petrolPrice));
+                });
+            }
+            catch (WebException)
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    MessageBox.Show("Unable to retreive prices. Please check your Internet connectivity.");
+                });
+            }
 
         }
 
