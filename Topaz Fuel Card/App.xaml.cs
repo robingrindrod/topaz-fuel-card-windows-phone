@@ -7,6 +7,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Topaz_Fuel_Card.Resources;
+using Topaz_Fuel_Card.ViewModel;
 
 namespace Topaz_Fuel_Card
 {

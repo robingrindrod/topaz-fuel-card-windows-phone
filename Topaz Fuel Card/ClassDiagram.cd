@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Topaz_Fuel_Card.ViewModel.TopazViewModel">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Topaz_Fuel_Card.ViewModel.TopazViewModel.State" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModel\TopazViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAARAAAAACgAAAAAAACAAAACgAQAAAAAABCBAAAQAAA=</HashCode>
+      <FileName>ViewModel\TopazViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Topaz_Fuel_Card.Model.Price">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAgAgAAAAAAA=</HashCode>
+      <FileName>Model\Price.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Topaz_Fuel_Card.Model.Prices">
+    <Position X="6.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Prices.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

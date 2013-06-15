@@ -9,7 +9,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Topaz_Fuel_Card.Resources;
 
-namespace Topaz_Fuel_Card
+namespace Topaz_Fuel_Card.View
 {
     public partial class MainPage : PhoneApplicationPage
     {
