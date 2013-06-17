@@ -14,6 +14,7 @@ namespace Topaz_Fuel_Card.ViewModel
 {
     public class TopazViewModel : INotifyPropertyChanged
     {
+        private const string PricesCacheFileName = "prices.dat";
         private const string PricesUrl = "http://topazfuelcard.azurewebsites.net/get-prices.php";
 
         IDictionary<String, Price> prices = new Dictionary<String, Price>();
@@ -38,33 +39,71 @@ namespace Topaz_Fuel_Card.ViewModel
         {
             State state = (State)result.AsyncState;
             HttpWebRequest request = state.Request;
+
+            Stream pricesStream = GetPricesStream(result, request);
+            if (pricesStream != null)
+            {
+                ParsePrices(pricesStream);
+                pricesStream.Close();
+            }
+        }
+
+        private void ParsePrices(Stream pricesStream)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(PricesHolder));
+            PricesHolder holder = (PricesHolder)serializer.Deserialize(pricesStream);
+            foreach (Price price in holder.Prices)
+            {
+                prices[price.Fuel] = price;
+            }
+
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs("DieselPrice"));
+                PropertyChanged(this, new PropertyChangedEventArgs("PetrolPrice"));
+            });
+        }
+
+        private static Stream GetPricesStream(IAsyncResult result, HttpWebRequest request)
+        {
+            Stream pricesStream = new MemoryStream();
+
+            IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetUserStoreForApplication();
+
             try
             {
+                // Copy resopnse to memory
                 HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result);
                 Stream resultStream = response.GetResponseStream();
+                resultStream.CopyTo(pricesStream);
+                pricesStream.Position = 0;
+                resultStream.Close();
 
-                XmlSerializer serializer = new XmlSerializer(typeof(PricesHolder));
-                PricesHolder holder = (PricesHolder)serializer.Deserialize(resultStream);
-                foreach(Price price in holder.Prices)
-                {
-                    prices.Add(price.Fuel, price);
-                }
-
-                Deployment.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("DieselPrice"));
-                    PropertyChanged(this, new PropertyChangedEventArgs("PetrolPrice"));
-                });
+                // Copy memory to cache
+                IsolatedStorageFileStream pricesCacheStream = isolatedStorage.OpenFile(PricesCacheFileName, FileMode.Create, FileAccess.Write);
+                pricesStream.CopyTo(pricesCacheStream);
+                pricesStream.Position = 0;
+                pricesCacheStream.Close();
             }
             catch (WebException)
             {
-                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                // If there is a problem retreiving the prices from the Internet, load the prices from the cache
+                pricesStream.Close();
+                if (isolatedStorage.FileExists(PricesCacheFileName))
                 {
-                    // TODO Extract as an event
-                    MessageBox.Show("Unable to retreive prices. Please check your Internet connectivity.");
-                });
-            }
+                    pricesStream = isolatedStorage.OpenFile(PricesCacheFileName, FileMode.Open, FileAccess.Read);
+                }
+                else
+                {
+                    pricesStream = null;
+                    Deployment.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        MessageBox.Show("Unable to retrieve prices.");
+                    });
 
+                }
+            }
+            return pricesStream;
         }
 
         public Price DieselPrice
